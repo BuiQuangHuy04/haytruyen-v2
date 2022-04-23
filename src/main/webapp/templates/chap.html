@@ -1,5 +1,6 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,143 +9,208 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css"/>
-    <link rel="icon" type="image/png" sizes="16x16" href="../images/logo-title1.png}">
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/logo-title1.png}">
 
-    <title>Chap 1</title>
+    <title th:text="${chapter.getChapName()}"></title>
 
-    <link href="../css/main.css" rel="stylesheet">
+    <link th:href="@{/src/main/webapp/css/main.css}" rel="stylesheet">
 </head>
+
+<style>
+    .modal-backdrop {
+        display: none !important;
+    }
+    :root{
+        --primary-color: #070720;
+        --background-main-color: #161742;
+    }
+    body {
+        background-color: var(--background-main-color);
+        font-family: "Mulish", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: white;
+        padding-right: 0px !important;
+        overflow: scroll !important;
+    }
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+    .header-logo {
+        padding: 20px 0 17px;
+        max-width: 120px;
+        vertical-align: middle;
+    }
+    .header-logo a {
+        display: inline-block;
+    }
+    .header-menu {
+        text-align: center;
+    }
+    img {
+        height: auto;
+        max-width: 95%;
+        vertical-align: middle;
+        border: 0;
+    }
+    ul {
+        list-style-type: none;
+    }
+
+    ul.footer-ul {
+        padding-left: 0 !important;
+    }
+    .dropdown-menu[data-bs-popper] {
+        top: 100%;
+        right: 0 !important;
+        left: auto !important;
+        margin-top: 0.125rem;
+    }
+    .manga-title{
+        height: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        color: whitesmoke;
+    }
+    .manga-description{
+        height: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+    .manga-genre, .manga-writer, .manga-update{
+        /*height: 50px;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        color: whitesmoke;
+    }
+    .card-img-top{
+        min-width: 100%;
+        height: 300px;
+        object-fit: fill;
+        background: gray;
+    }
+    .card{
+        background: #1d1e39 !important;
+    }
+    .manga-poster {
+        max-width: inherit;
+    }
+    .navbar-dark{
+        background-color: var(--primary-color) !important;
+        margin-bottom: 20px;
+        min-width: 100% !important;
+    }
+    .footer-dark{
+        background-color: var(--primary-color) !important;
+        padding-top: 60px;
+        padding-bottom: 40px;
+        position: relative;
+        color: white;
+    }
+    .footer-logo{
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .footer-nav{
+        margin-bottom: 15px;
+    }
+
+    .footer-nav a {
+        color: white;
+        display: flex;
+        justify-content: space-around;
+    }
+</style>
 
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #e3f2fd">
-        <div class="container">
-            <a class="navbar-brand" style="max-width: 200px" href="/#">
-                <img src="../images/logo1.png" style="max-width: 200px">
-            </a>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/#">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="menu-button" onclick="collapseGenres()">
-                            Genres
-                        </a>
-                        <ul class="dropdown-menu" id="listGenres" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Action</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Adventure</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Comedy</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Drama</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Fantasy</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Historical</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item">
-                                    <span>Shounen</span>
-                                </a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="/">All</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <form method="get" action="/">
-                        <input class="form-control" type="search" name="text" placeholder="Search" aria-label="Search">
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div th:replace="~{fragments/frontend::navbar}"></div>
 </header>
 
 <main class="container">
     <div class="row  mt-3">
         <div class="col-sm-8 order-sm-1 order-2" style="margin: auto; text-align: center">
-            <a href="" style="width: 40px; margin-bottom: 20px; background-color: #7894ff" class="btn btn-primary" tabindex="-1" th:role="button" aria-disabled="true">
-                <img src="../images/back-icon.png">
-            </a>
+            <!--navigation-->
+            <div class="mx-auto" style="width: 80%;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;">
+                <!--back button-->
+                <a th:href="@{/manga(id=${manga.getId()})}" style="width: 40px;margin: 30px ; background-color: #7894ff" class="btn btn-primary" tabindex="-1" th:role="button" aria-disabled="true">
+                    <img th:src="@{../images/back-icon.png}">
+                </a>
+                <!--dropdown list chapter-->
+                <div class="nav-item dropdown">
+                    <button class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Chap
+                    </button>
+                    <ul style="height: 200px; overflow-y: scroll" class="dropdown-menu" aria-labelledby="navbarDropdown1">
+                        <li th:each="chapter: ${manga.getChap()}">
+                            <a class="dropdown-item" th:href="|/chap?id=${manga.id}&chapter=${chapter.chapName}|" th:text="${chapter.chapName}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--manga content-->
             <table class="story-see-content">
-                <tr>
+                <tr th:each="image : ${chapter.getListImg().getUrlImg()}">
                     <td>
-                        <img class="" src="https://salt.tikicdn.com/ts/product/41/9e/03/2bb80ee3b1de2d6c3186b7b6b6281093.jpg" alt="">
+                        <img class="" th:src="${image}" alt="">
                     </td>
                 </tr>
             </table>
-            <a href="" style="width: 40px;margin: 30px ; background-color: #7894ff" class="btn btn-primary" tabindex="-1" th:role="button" aria-disabled="true">
-                <img src="../images/back-icon.png">
-            </a>
+
+            <!--navigation-->
+            <div class="mx-auto" style="width: 80%;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;">
+                <!--back button-->
+                <a th:href="@{/manga(id=${manga.getId()})}" style="width: 40px;margin: 30px ; background-color: #7894ff" class="btn btn-primary" tabindex="-1" th:role="button" aria-disabled="true">
+                    <img th:src="@{../images/back-icon.png}">
+                </a>
+                <!--dropup list chapter-->
+                <div class="nav-item dropup">
+                    <button class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Chap
+                    </button>
+                    <ul style="height: 200px; overflow-y: scroll" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li th:each="chapter: ${manga.getChap()}">
+                            <a class="dropdown-item" th:href="|/chap?id=${manga.id}&chapter=${chapter.chapName}|" th:text="${chapter.chapName}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
 </main>
 
-<footer class="footer-dark" >
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="footer-logo">
-                    <a href="/#"><img src="../images/logo1.png" alt=""></a>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="footer-nav">
-                    <ul class="footer-ul">
-                        <li class="active"><a href="/#">Homepage</a></li>
-                        <li><a href="#">Contacts</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <p style="text-align: center;">
-                    Copyright &copy;
-                    <script>document.write(new Date().getFullYear());</script>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-
-    <script>
-        function collapseGenres() {
-            if (document.getElementById("listGenres").className==="dropdown-menu show")
-                document.getElementById("listGenres").className = "dropdown-menu";
-            else document.getElementById("listGenres").className = "dropdown-menu show";
-        }
-    </script>
+<footer th:replace="~{fragments/frontend::footer}">
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+    function collapseMenu() {
+        if (document.getElementById("myNavbar").className==="navbar-collapse collapse show")
+            document.getElementById("myNavbar").className = "navbar-collapse collapse";
+        else document.getElementById("myNavbar").className = "navbar-collapse collapse show";
+    }
+</script>
 
 </body>
 </html>

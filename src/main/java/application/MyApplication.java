@@ -1,6 +1,9 @@
 package application;
 
-import controller.*;
+import controller.ChapterController;
+import controller.HomeController;
+import controller.IController;
+import controller.MangaController;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
@@ -27,7 +30,10 @@ public class MyApplication {
         this.templateEngine.setTemplateResolver(templateResolver);
         this.controllersByURL = new HashMap<>();
 
+
         this.controllersByURL.put("/", new HomeController());
+        this.controllersByURL.put("/manga", new MangaController());
+        this.controllersByURL.put("/chap", new ChapterController());
     }
 
     public IController resolveControllerForRequest(final HttpServletRequest request) {
