@@ -11,6 +11,7 @@ public class MangaService {
 
     //tim tim truyen theo id
     public Manga getMangaByID(String id) {
+        increaseMangaVisits(id);
         return new MangaDAO().getMangaByID(id);
     }
 
@@ -46,5 +47,13 @@ public class MangaService {
 
         long totalManga = new MangaDAO().getMangaNumber(filter);
         return (long) Math.ceil((float) totalManga / NUM_OF_MANGA_ON_PAGE);
+    }
+
+    public void increaseMangaVisits(String id) {
+        new MangaDAO().increaseMangaVisits(id);
+    }
+
+    public List<Manga> getTopTrending() {
+        return new MangaDAO().getTopTrending().subList(0,3);
     }
 }

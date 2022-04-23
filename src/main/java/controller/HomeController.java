@@ -67,6 +67,9 @@ public class HomeController implements IController {
         //tra ve list truyen de dung o ben front end
         ctx.setVariable("list", list);
 
+        //tra ve top truyen hot
+        ctx.setVariable("trending", new MangaService().getTopTrending());
+
         //goi template index.html
         templateEngine.process("index", ctx, response.getWriter());
     }

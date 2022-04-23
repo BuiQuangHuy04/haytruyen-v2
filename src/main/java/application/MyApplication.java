@@ -1,9 +1,7 @@
 package application;
 
-import controller.ChapterController;
-import controller.HomeController;
-import controller.IController;
-import controller.MangaController;
+import controller.CommentController;
+import controller.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
@@ -34,6 +32,7 @@ public class MyApplication {
         this.controllersByURL.put("/", new HomeController());
         this.controllersByURL.put("/manga", new MangaController());
         this.controllersByURL.put("/chap", new ChapterController());
+        this.controllersByURL.put("/comment", new CommentController());
     }
 
     public IController resolveControllerForRequest(final HttpServletRequest request) {
