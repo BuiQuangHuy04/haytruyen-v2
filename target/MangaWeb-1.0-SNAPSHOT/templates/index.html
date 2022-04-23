@@ -1,0 +1,223 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head th:replace="~{fragments/frontend::head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css"/>
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/logo-title1.png}">
+    <link th:href="@{/css/main.css}" href="../../resources/style.css" rel="stylesheet">
+
+    <title th:text="#{site_name}">Hay Truyện</title>
+</head>
+
+<style>
+    .modal-backdrop {
+        display: none !important;
+    }
+    :root{
+        --primary-color: #070720;
+        --background-main-color: #161742;
+    }
+    body {
+        background-color: var(--background-main-color);
+        font-family: "Mulish", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: white;
+        padding-right: 0px !important;
+        overflow: scroll !important;
+    }
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    *, ::after, ::before {
+        box-sizing: border-box;
+    }
+    .header-logo {
+        padding: 20px 0 17px;
+        max-width: 120px;
+        vertical-align: middle;
+    }
+    .header-logo a {
+        display: inline-block;
+    }
+    .header-menu {
+        text-align: center;
+    }
+    img {
+        height: auto;
+        max-width: 95%;
+        vertical-align: middle;
+        border: 0;
+    }
+    ul {
+        list-style-type: none;
+    }
+    ul.footer-ul {
+        padding-left: 0 !important;
+    }
+    .dropdown-menu[data-bs-popper] {
+        top: 100%;
+        right: 0 !important;
+        left: auto !important;
+        margin-top: 0.125rem;
+    }
+    .manga-title{
+        height: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        -webkit-box-orient: vertical;
+        color: whitesmoke;
+    }
+    .manga-description{
+        height: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* number of lines to show */
+        -webkit-box-orient: vertical;
+    }
+    .manga-genre, .manga-writer, .manga-update{
+        /*height: 50px;*/
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        color: whitesmoke;
+    }
+    .card-img-top{
+        min-width: 100%;
+        height: 350px;
+        object-fit: fill;
+        background: gray;
+    }
+    .card{
+        background: #1d1e39 !important;
+    }
+    .manga-poster {
+        max-width: inherit;
+    }
+    .navbar-dark{
+        background-color: var(--primary-color) !important;
+        margin-bottom: 20px;
+        min-width: 100% !important;
+    }
+    .footer-dark{
+        background-color: var(--primary-color) !important;
+        padding-top: 60px;
+        padding-bottom: 40px;
+        position: relative;
+        color: white;
+    }
+    .footer-logo{
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .footer-nav{
+        margin-bottom: 15px;
+    }
+
+    .footer-nav a {
+        color: white;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    @media only screen and (max-width: 500px) {
+        #trending {
+            display: none !important;
+        }
+        .card-img-top {
+            height: 400px !important;
+        }
+    }
+
+    @media only screen and (min-width: 500px) {
+        #trending {
+            width: 36%  !important;
+            max-width: 300px;
+            min-width: 200px;
+            margin: 50px 0px 20px 10px;
+            background: #1d1e39 !important;
+            height: fit-content;
+            border: 1px solid;
+            padding: 1px
+        }
+    }
+</style>
+
+<body>
+
+    <header>
+        <div th:replace="~{fragments/frontend::navbar}"></div>
+        <div th:replace="~{fragments/frontend::carousel}"></div>
+        <div th:replace="~{fragments/frontend::breadcrumb}"></div>
+    </header>
+
+    <main style="display: flex">
+        <div style="width: 100% !important; min-width: 180px">
+            <div class="container pt-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                <div class="col" th:each="manga : ${list}">
+                    <div class="card p-0" style="border: 1px solid">
+                        <div class="imgPlaceHolder" style="border: 2px solid">
+                            <a href="#" th:href="@{/manga(id=${manga.getId()})}" class="text-decoration-none">
+                                <img th:src="${manga.getMangaPoster()}" class="card-img-top">
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <a href="#" th:href="@{/manga(id=${manga.getId()})}" class="text-decoration-none">
+                                <h5 class="card-title manga-title" th:text="${manga.getMangaName()}">Kimetsu No Yaiba</h5>
+                            </a>
+                            <div class="card-text manga-writer">
+                                <span th:each="gen,iterStat : *{manga.mangaWriter}" th:text="${gen}+ ${!iterStat.last ? ', ' : ''}"><small class="text-muted">Gotouge Koyoharu</small></span>
+                            </div>
+                            <div class="card-text manga-genre">
+                                <span th:each="gen,iterStat : *{manga.mangaGenre}" th:text="${gen}+ ${!iterStat.last ? ', ' : ''}"><small class="text-muted">Drama</small></span>
+                            </div>
+                            <div class="card-text manga-update">
+                                <span th:text="|Updated chap ${manga.getChap().size()}|"><small class="text-muted">Updated</small></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!--        <nav th:if="${totalPages>=2}">-->
+            <nav>
+                <ul class="pagination justify-content-center mt-3">
+                    <li th:if="${page >1}" class="page-item"><a class="page-link" href="#" th:href="@{${url}(page=1)}">First</a></li>
+                    <li th:if="${page >1}" class="page-item"><a class="page-link" th:href="@{${url}(page=${page}-1)}">&laquo;</a></li>
+                    <li th:if="${page > 2}" class="page-item"><a class="page-link" th:href="@{${url}(page=${page}-2)}"><span th:text="${page}-2">1</span></a></li>
+                    <li th:if="${page > 1}" class="page-item"><a class="page-link" th:href="@{${url}(page=${page}-1)}"><span th:text="${page}-1">2</span></a></li>
+                    <li class="page-item active"><span class="page-link" th:text="${page}">3</span></li>
+                    <li th:if="${page < totalPages - 1}" class="page-item"><a class="page-link" th:href="@{${url}(page=${page}+1)}"><span th:text="${page}+1">4</span></a></li>
+                    <li th:if="${page < totalPages - 2}" class="page-item"><a class="page-link" th:href="@{${url}(page=${page}+2)}"><span th:text="${page}+2">5</span></a></li>
+                    <li th:if="${page < totalPages}" class="page-item"><a class="page-link" th:href="@{${url}(page=${page}+1)}">&raquo;</a></li>
+                    <li th:if="${page < totalPages}" class="page-item"><a class="page-link" th:href="@{${url}(page=${totalPages})}">Last</a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </main>
+
+    <footer th:replace="~{fragments/frontend::footer}">
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        function collapseMenu() {
+            if (document.getElementById("myNavbar").className==="navbar-collapse collapse show")
+                document.getElementById("myNavbar").className = "navbar-collapse collapse";
+            else document.getElementById("myNavbar").className = "navbar-collapse collapse show";
+        }
+    </script>
+</body>
+</html>
