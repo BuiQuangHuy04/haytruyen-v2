@@ -162,6 +162,20 @@
     </header>
 
     <main style="display: flex">
+
+        <div th:id="trending" class="d-flex flex-column align-items-stretch flex-shrink-0">
+            <h2 style="margin: auto">Trending now</h2>
+            <div class="list-group list-group-flush border-bottom scrollarea" th:each="manga : ${trending}" style="padding: 10px 10px 0px 10px">
+                <text class="d-flex w-100 align-items-center justify-content-between">
+                    <a href="#" th:href="@{/manga(id=${manga.getId()})}" class="text-decoration-none">
+                        <strong class="mb-1" th:text="${manga.getMangaName()}">Kimetsu No Yaiba</strong>
+                    </a>
+                    <span th:text="|Updated chap ${manga.getChap().size()}|"><small class="text-muted">Updated</small></span>
+                </text>
+                <div class="col-10 mb-1 small" th:text="|${manga.getVisits()} views|">Views</div>
+            </div>
+        </div>
+
         <div style="width: 100% !important; min-width: 180px">
             <div class="container pt-5">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">

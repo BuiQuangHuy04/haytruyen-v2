@@ -1,6 +1,11 @@
 package DAO;
 
+import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import model.Chap;
 import model.ListImg;
 import model.Manga;
@@ -13,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Sorts.descending;
 
 public class MangaDAO extends AbsDAO {
 
@@ -55,7 +61,7 @@ public class MangaDAO extends AbsDAO {
             chapArrayList.add(chap);
         }
         return chapArrayList;
-    }
+   }
 
     public ListImg docstoImgList(List<Document> documents) {
         ListImg ImageList = new ListImg();
@@ -77,5 +83,38 @@ public class MangaDAO extends AbsDAO {
     public long getMangaNumber(Document filter) {
         MongoCollection<Document> manga = getDB().getCollection("manga");
         return manga.countDocuments(filter);
+    }
+    public void increaseMangaVisits(String id) {
+        MongoCollection collection = getDB().getCollection("manga");
+
+        Document doc = (Document) collection.find(eq("_id", new ObjectId(id)))
+                .projection(
+                        Projections.fields(
+                                Projections.include("_id", "visits"),
+                                Projections.excludeId()))
+                .first();
+
+        Document query = new Document().append("_id",new ObjectId(id));
+        Bson updates = Updates.combine(
+                Updates.set("visits",Integer.parseInt(String.valueOf(doc.get("visits"))) + 1));
+        UpdateOptions options = new UpdateOptions().upsert(true);
+        try {
+            collection.updateOne(query, updates, options);
+        } catch (MongoException me) {
+        }
+    }
+
+    public List<Manga> getTopTrending() {
+        //tim collection "manga"
+        MongoCollection<Document> mangaCollection = getDB().getCollection("manga");
+        FindIterable<Document> listDoc = mangaCollection.find().sort(descending("visits"));
+
+        List<Manga> mangaList = new ArrayList<>();
+
+        listDoc.forEach(d-> {
+            mangaList.add(doctoManga(d));
+        });
+
+        return mangaList;
     }
 }
