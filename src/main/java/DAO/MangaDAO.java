@@ -1,48 +1,24 @@
 package DAO;
 
-import com.mongodb.MongoException;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Projections;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
 import model.Chap;
 import model.ListImg;
 import model.Manga;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Sorts.descending;
-
 public class MangaDAO extends AbsDAO {
 
-    public Manga getMangaByID(String id) {
+    public List<Manga> getManga() {
         //tim collection "manga"
         MongoCollection<Document> listManga = getDB().getCollection("manga");
-        //lay ra cac ban ghi theo id, tra ve Object dang Document
-        Document manga = listManga.find(eq("_id", new ObjectId(id))).first();
-        //goi ham de truyen tu Object document thanh Object manga
-        return doctoManga(manga);
-    }
-
-    public List<Manga> getTopTrending() {
-        //tim collection "manga"
-        MongoCollection<Document> mangaCollection = getDB().getCollection("manga");
-        FindIterable<Document> listDoc = mangaCollection.find().sort(descending("visits"));
-
-        List<Manga> mangaList = new ArrayList<>();
-
-        listDoc.forEach(d-> {
-            mangaList.add(doctoManga(d));
-        });
-
-        return mangaList;
+        List<Manga> list = new ArrayList<>();
+        listManga.find().limit(4).forEach(d -> list.add(doctoManga(d)));
+        return list;
     }
 
     //chuyen tu Document -> Manga
@@ -87,35 +63,8 @@ public class MangaDAO extends AbsDAO {
         return ImageList;
     }
 
-    public List<Manga> searchManga(Document filter, Document sort, int limit, int skip) {
-        MongoCollection<Document> manga = getDB().getCollection("manga");
-        List<Manga> list = new ArrayList<>();
-        manga.find(filter).sort(sort).limit(limit).skip(skip).forEach(d -> list.add(doctoManga(d)));
-        return list;
-    }
-
     public long getMangaNumber(Document filter) {
         MongoCollection<Document> manga = getDB().getCollection("manga");
         return manga.countDocuments(filter);
-    }
-
-    public void increaseMangaVisits(String id) {
-        MongoCollection collection = getDB().getCollection("manga");
-
-        Document doc = (Document) collection.find(eq("_id", new ObjectId(id)))
-                .projection(
-                        Projections.fields(
-                                Projections.include("_id", "visits"),
-                                Projections.excludeId()))
-                .first();
-
-        Document query = new Document().append("_id",new ObjectId(id));
-        Bson updates = Updates.combine(
-                Updates.set("visits",Integer.parseInt(String.valueOf(doc.get("visits"))) + 1));
-        UpdateOptions options = new UpdateOptions().upsert(true);
-        try {
-            collection.updateOne(query, updates, options);
-        } catch (MongoException me) {
-        }
     }
 }
