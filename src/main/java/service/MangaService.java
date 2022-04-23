@@ -8,13 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MangaService {
-
-    //tim tim truyen theo id
-    public Manga getMangaByID(String id) {
-        increaseMangaVisits(id);
-        return new MangaDAO().getMangaByID(id);
-    }
-
+    
     //moi trang mac dinh co 12 truyen
     final static int NUM_OF_MANGA_ON_PAGE = 4;
 
@@ -47,13 +41,5 @@ public class MangaService {
 
         long totalManga = new MangaDAO().getMangaNumber(filter);
         return (long) Math.ceil((float) totalManga / NUM_OF_MANGA_ON_PAGE);
-    }
-
-    public void increaseMangaVisits(String id) {
-        new MangaDAO().increaseMangaVisits(id);
-    }
-
-    public List<Manga> getTopTrending() {
-        return new MangaDAO().getTopTrending().subList(0,3);
     }
 }
