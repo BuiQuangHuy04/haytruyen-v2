@@ -1,5 +1,6 @@
 package controller;
 
+import DAO.MangaDAO;
 import model.Manga;
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -20,7 +21,7 @@ public class HomeController implements IController {
         String by = null;
         String value = null;
         String text = null;
-        
+
         //tao link truyen
         if (request.getParameter("text") != null) {
             text = request.getParameter("text").trim();
@@ -35,9 +36,8 @@ public class HomeController implements IController {
             value = request.getParameter("value").trim();
             url = url + "&value=" + value;
         }
-        //tra ve link truyen de dung o ben front end
+        //tra ve link truyen, breadcrumb de dung o ben front end
         ctx.setVariable("url", url);
-        //phan trang
         long totalPages = new MangaService().getTotalPages(by, value, text);
         ctx.setVariable("totalPages", totalPages);
 
@@ -47,7 +47,7 @@ public class HomeController implements IController {
         ctx.setVariable("page", page);
 
         //loc truyen theo cac tham so truyen vao
-        List<Manga> list = new MangaService().searchManga(by, value, page, text);
+        List<Manga> list = new MangaDAO().getManga();
 
         //tra ve list truyen de dung o ben front end
         ctx.setVariable("list", list);
