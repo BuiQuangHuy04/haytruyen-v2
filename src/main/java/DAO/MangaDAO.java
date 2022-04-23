@@ -13,14 +13,6 @@ import java.util.List;
 
 public class MangaDAO extends AbsDAO {
 
-    public List<Manga> getManga() {
-        //tim collection "manga"
-        MongoCollection<Document> listManga = getDB().getCollection("manga");
-        List<Manga> list = new ArrayList<>();
-        listManga.find().limit(4).forEach(d -> list.add(doctoManga(d)));
-        return list;
-    }
-
     //chuyen tu Document -> Manga
     public Manga doctoManga(Bson bson) {
         //tao 1 Object Manga
@@ -61,6 +53,13 @@ public class MangaDAO extends AbsDAO {
         }
         ImageList.setUrlImg(imgUrl);
         return ImageList;
+    }
+
+    public List<Manga> searchManga(Document filter, Document sort, int limit, int skip) {
+        MongoCollection<Document> manga = getDB().getCollection("manga");
+        List<Manga> list = new ArrayList<>();
+        manga.find(filter).sort(sort).limit(limit).skip(skip).forEach(d -> list.add(doctoManga(d)));
+        return list;
     }
 
     public long getMangaNumber(Document filter) {
