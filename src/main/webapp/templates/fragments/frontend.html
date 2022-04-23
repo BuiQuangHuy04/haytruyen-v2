@@ -6,7 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css"/>
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/logo-title1.png}" href="../../images/logo-title1.png">
-    <!--    <link rel="stylesheet" type="text/css" th:href="@{/src/main/webapp/css/main.css}" />-->
     <link rel="stylesheet" type="text/css" href="../../../resources/style.css" th:href="@{/css/main.css}" />
 
     <title th:text="#{site_name}">Hay Truyện</title>
@@ -48,6 +47,50 @@
                 <form method="get" action="/">
                     <input class="form-control" type="search" name="text" placeholder="Search" aria-label="Search">
                 </form>
+
+                <button id="login" type="button" class="guest btn btn-primary ms-3 d-none" data-bs-toggle="modal" data-bs-target="#modal-login">
+                    <span th:text="#{login}">Login</span>
+                </button>
+
+                <div id="login-spinner" class="spinner-border text-light ms-3" role="status"></div>
+
+                <div class="dropdown">
+                    <img id="avatar" th:src="#{ava_user}" src="../../images/user.svg" data-bs-toggle="dropdown" width="38x" height="38x" class="user avatar rounded-circle ms-3 d-none dropdown-toggle">
+                    <ul class="dropdown-menu dropdown-menu-center text-small" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modal-login">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" onclick="firebase.auth().signOut();">Sign out</a></li>
+                    </ul>
+                </div>
+
+                <div class="modal d-block1" id="modal-login" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content shadow">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Login</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="firebaseui-auth-container" class="guest"></div>
+                                <div id="user-signed-in" class="d-none d-flex user">
+                                    <div class="flex-grow-1 d-flex justify-content-center">
+                                        <img th:src="@{/images/user.svg}" src="../../images/user.svg" width="110px" height="110px" class="avatar rounded-circle">
+                                    </div>
+                                    <div class="flex-grow-1  d-flex flex-column align-self-center me-4">
+                                        <div id="name" class="align-self-center text-primary fs-5">Name</div>
+                                        <div id="email" class="align-self-center ">Email</div>
+                                        <div id="phone">Phone</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer d-none user">
+                                <button id="sign-out" type="button" class="btn btn-danger" onclick="firebase.auth().signOut();">Sign out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -125,5 +168,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
 
 </footer>

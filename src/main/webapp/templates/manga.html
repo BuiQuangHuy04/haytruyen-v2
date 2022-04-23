@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       lang="en">
-<head>
+<head th:replace="~{fragments/frontend::head}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -179,6 +179,47 @@
 
         <div class="col-sm-4 order-sm-2 order-1">
             <img class="manga-poster" src="" th:src="${manga.mangaPoster}" alt="">
+        </div>
+    </div>
+
+
+    <hr>
+    <div class="card shadow-0 border mt-5" style="margin-bottom: 30px;">
+        <div class="card-body p-4">
+            <h5 class="sm-mb-4"> Comments (<span th:text="*{manga.getTotal_comments()}">20</span>)</h5>
+            <div class="form-outline mb-4">
+                <form class="d-flex user d-none" method="post" th:action="@{/comment(action=addComment)}">
+                    <input type="hidden" th:value="*{id}" name="manga_id"/>
+                    <div class="ps-0"><input type="text" class="form-control" name="name" placeholder="Name"/></div>
+                    <div class="ps-2"><input type="text" class="form-control" name="email" placeholder="Email"/></div>
+                    <div class="flex-grow-1" style="margin-left: 10px"><input type="text" class="form-control" name="comment" placeholder="Comment"/></div>
+                    <div class="ps-2">
+                        <button class="btn btn-outline-success" type="submit">Send</button>
+                    </div>
+                </form>
+                <div class="text-center guest">You must be <a href="#" data-bs-toggle="modal" data-bs-target="#modal-login">logged in</a> to post a comment.</div>
+            </div>
+            <div class="card" th:each="cmt:${comments}">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <img th:src="#{ava_user_cmt}" src="../images/user.svg" alt="avatar" width="63px" height="63px"/>
+                        <div class="d-flex flex-column ">
+                            <p class="small m-0 ms-2">
+                                <span th:text="${cmt.getName()}">Martha</span>
+                            </p>
+                            <p class="small m-0 ms-2 text-muted">
+                                <span th:text="${cmt.getEmail()}">11192355@neu.edu.vn</span>
+                            </p>
+                            <p class="small m-0 ms-2 text-muted">
+                                <span th:text="${cmt.getTimeAgo()}">2 mins ago</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <span th:text="${cmt.getText()}">text comment</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </main>
