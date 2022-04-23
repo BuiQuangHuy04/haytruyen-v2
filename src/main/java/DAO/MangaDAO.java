@@ -6,12 +6,24 @@ import model.ListImg;
 import model.Manga;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
+
 public class MangaDAO extends AbsDAO {
+
+    public Manga getMangaByID(String id) {
+        //tim collection "manga"
+        MongoCollection<Document> listManga = getDB().getCollection("manga");
+        //lay ra cac ban ghi theo id, tra ve Object dang Document
+        Document manga = listManga.find(eq("_id", new ObjectId(id))).first();
+        //goi ham de truyen tu Object document thanh Object manga
+        return doctoManga(manga);
+    }
 
     //chuyen tu Document -> Manga
     public Manga doctoManga(Bson bson) {

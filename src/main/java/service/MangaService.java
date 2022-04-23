@@ -9,6 +9,11 @@ import java.util.List;
 
 public class MangaService {
 
+    //tim tim truyen theo id
+    public Manga getMangaByID(String id) {
+        return new MangaDAO().getMangaByID(id);
+    }
+
     //moi trang mac dinh co 4 truyen
     final static int NUM_OF_MANGA_ON_PAGE = 4;
 
